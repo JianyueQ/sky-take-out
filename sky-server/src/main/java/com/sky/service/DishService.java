@@ -21,10 +21,11 @@ public interface DishService {
 
     /**
      * 根据分类id查询菜品
+     *
      * @param categoryId
      * @return
      */
-     List<Dish> listByCategory(Long categoryId);
+     List<DishVO> listByCategory(Dish categoryId);
 
     /**
      * 根据id查询菜品

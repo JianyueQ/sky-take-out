@@ -30,21 +30,24 @@
         select d.* ,c.name as categoryName from dish d left outer join category c on d.category_id = c.id
         <where>
             <if test=" name != null and name != '' ">
-                name like concat('%',#{name},'%')
+                d.name like concat('%',#{name},'%')
             </if>
             <if test="categoryId != null">and category_id = #{categoryId}</if>
-            <if test="status != null">and status = #{status} </if>
+            <if test="status != null">and d.status = #{status} </if>
         </where>
         order by create_time desc
+    </select>
+
+    <select id="listByID" resultType="com.sky.entity.Dish">
+        select * from dish where id = #{id}
     </select>
     <select id="list" resultType="com.sky.entity.Dish">
         select * from dish
         <where>
-            <if test="categoryId != null and categoryId != '' "> category_id = #{categoryId} </if>
-            <if test="id != null and id != '' "> id = #{id} </if>
+            <if test="categoryId != null">and category_id = #{categoryId}</if>
+            <if test="status != null">and status = #{status}</if>
         </where>
     </select>
-    <select id="listByID" resultType="com.sky.entity.Dish">
-        select * from dish where id = #{id}
-    </select>
+
+
 </mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.AddressBookMapper">
+    <insert id="save">
+        insert into address_book (user_id, consignee, sex, phone, province_code, province_name, city_code, city_name, district_code, district_name, detail, label )
+        VALUES
+            (#{userId}, #{consignee}, #{sex}, #{phone}, #{provinceCode}, #{provinceName}, #{cityCode}, #{cityName}, #{districtCode}, #{districtName}, #{detail}, #{label})
+    </insert>
+    <update id="update">
+        update address_book
+        <set>
+            <if test="consignee != null"> consignee = #{consignee}, </if>
+            <if test="sex != null"> sex = #{sex}, </if>
+            <if test="phone != null"> phone = #{phone}, </if>
+            <if test="detail != null"> detail = #{detail}, </if>
+            <if test="label != null"> label = #{label}, </if>
+            <if test="isDefault != null"> is_default = #{isDefault}, </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updateIsDefaultByUserId">
+        update address_book set is_default = #{isDefault} where user_id = #{userId}
+    </update>
+    <delete id="delete">
+        delete from address_book where id = #{id}
+    </delete>
+
+    <select id="getById" resultType="com.sky.entity.AddressBook">
+        select * from address_book where id = #{id}
+    </select>
+    <select id="getAllByUserId" resultType="com.sky.entity.AddressBook">
+        select * from address_book where user_id = #{userId}
+    </select>
+    <select id="getAllById" resultType="com.sky.entity.AddressBook">
+        select * from address_book where id =#{id}
+    </select>
+</mapper>

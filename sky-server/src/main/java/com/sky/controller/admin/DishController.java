@@ -9,20 +9,36 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
  * 菜品管理
  */
 @Slf4j
-@RestController
+@RestController("adminDishController")
 @RequestMapping("/admin/dish")
 public class DishController {
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    /**
+     * 清理缓存数据
+     * @param pattern
+     */
+    private void cleanRedisData(String pattern){
+        //先查询keys
+        Set keys = redisTemplate.keys(pattern);
+        //在删除
+        redisTemplate.delete(keys);
+    }
+
 
     /**
      * 菜品分页查询
@@ -42,10 +58,12 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
-    public Result<List<Dish>> getByCategory(Long categoryId){
+    public Result<List<DishVO>> getByCategory(Long categoryId){
         log.info("分类id:{}",categoryId);
-        List<Dish> list = dishService.listByCategory(categoryId);
-        return Result.success(list);
+        Dish dish = new Dish();
+        dish.setCategoryId(categoryId);
+        List<DishVO> dishVO = dishService.listByCategory(dish);
+        return Result.success(dishVO);
     }
 
     /**
@@ -79,6 +97,9 @@ public class DishController {
     public Result<DishDTO> update(@RequestBody DishDTO dishDTO){
         log.info("DishDTO:{}",dishDTO);
         dishService.update(dishDTO);
+
+        cleanRedisData("dish_*");
+
         return Result.success();
     }
 
@@ -91,6 +112,9 @@ public class DishController {
     public Result<String> delete(@RequestParam List<Long> ids){
         log.info("id:{}",ids);
         dishService.delete(ids);
+
+        cleanRedisData("dish_*");
+
         return Result.success();
     }
 
@@ -104,6 +128,9 @@ public class DishController {
     public Result<String> updateStatus(@PathVariable Integer status,Long id){
         log.info("status:{},Id:{}",status,id);
         dishService.updateStatus(status,id);
+
+        cleanRedisData("dish_*");
+
         return Result.success();
     }
 }

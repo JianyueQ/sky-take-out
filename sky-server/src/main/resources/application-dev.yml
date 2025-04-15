@@ -11,3 +11,10 @@ sky:
     access-key-id: ${ALIBABA_CLOUD_ACCESS_KEY_ID}
     access-key-secret: ${ALIBABA_CLOUD_ACCESS_KEY_SECRET}
     bucket-name: sky-take-out-0011
+  redis:
+    database: 10
+    host: localhost
+    port: 6379
+  wechat:
+    appid: wx8ea66dd837e9ea79
+    secret: e4b141d02f23d37965fe8d31960f1094
